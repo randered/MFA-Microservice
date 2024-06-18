@@ -1,0 +1,29 @@
+mfa:
+  code:
+    expiry: 10
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mfa_db
+    username: "${DB_USER}"
+    password: "${DB_PASS}"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  mail:
+    host: "${MAIL_HOST}"
+    port: "${MAIL_PORT}"
+    username: "${MAIL_USERNAME}"
+    password: "${MAIL_PASSWORD}"
+    properties:
+      mail:
+        smtp:
+          auth: "${STARTTLS_ENABLE}"
+          starttls:
+            enable: "${SMTP_AUTH}"
+
+server:
+  port: 8080
