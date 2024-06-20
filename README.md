@@ -8,9 +8,9 @@ This project demonstrates a Java Spring Boot application integrated with a MySQL
 
 - [Requirements](#requirements)
 - [Setup](#setup) 
-    - [Build and Run](#build and Run)
-    - [Environment Variables](#environment variables)
-    - [Docker](#docker compose)
+  - [Build and Run](#build-and-Run)
+  - [Environment Variables](#environment-variables)
+  - [Docker](#docker-compose)
 - [Endpoints](#endpoints)
 - [Database](#database)
 - [Troubleshooting](#troubleshooting)
