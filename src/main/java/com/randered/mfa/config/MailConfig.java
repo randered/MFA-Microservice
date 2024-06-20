@@ -27,21 +27,7 @@ public class MailConfig {
     @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
     private boolean starttlsEnable;
 
-    public Session getSession() {
-        Properties props = new Properties();
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", String.valueOf(port));
-        props.put("mail.smtp.auth", String.valueOf(smtpAuth));
-        props.put("mail.smtp.starttls.enable", String.valueOf(starttlsEnable));
-
-        return Session.getInstance(props, new jakarta.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
-    }
-
-    public Session getGoogleSession() {
+    public Session getGmailSession() {
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", String.valueOf(port));

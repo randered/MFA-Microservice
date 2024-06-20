@@ -14,7 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import static com.randered.mfa.constants.Constants.EMAIL_BODY;
+import static com.randered.mfa.constants.Constants.EMAIL_SUBJECT;
+import static com.randered.mfa.constants.Constants.LOG_FAILURE;
+import static com.randered.mfa.constants.Constants.LOG_FAILURE_EXCEPTION;
+import static com.randered.mfa.constants.Constants.LOG_SUCCESS;
 
 @Service
 @RequiredArgsConstructor
@@ -29,19 +36,20 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Async
     public void sendEmail(final MfaEntity mfaEntity) throws EmailSendingException {
         try {
-            Message message = new MimeMessage(mailConfig.getGoogleSession());
+            Message message = new MimeMessage(mailConfig.getGmailSession());
             message.setFrom(new InternetAddress(email));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(mfaEntity.getEmail()));
-            message.setSubject("Your MFA Code");
-            message.setText("Your MFA code is: " + mfaEntity.getCode());
+            message.setSubject(EMAIL_SUBJECT);
+            message.setText(EMAIL_BODY + mfaEntity.getCode());
             Transport.send(message);
-            log.info("MFA code to {} send successfully.", mfaEntity.getEmail());
+            log.info(LOG_SUCCESS, mfaEntity.getEmail());
 
         } catch (MessagingException e) {
-            log.error("Failed to send MFA code to {}", mfaEntity.getEmail(), e);
-            throw new EmailSendingException("Failed to send email to " + mfaEntity.getEmail(), e);
+            log.error(LOG_FAILURE, mfaEntity.getEmail(), e);
+            throw new EmailSendingException(LOG_FAILURE_EXCEPTION + mfaEntity.getEmail(), e);
         }
     }
 }

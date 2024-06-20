@@ -1,6 +1,7 @@
 package com.randered.mfa.controller;
 
 import com.randered.mfa.entity.MfaEntity;
+import com.randered.mfa.enums.RequestType;
 import com.randered.mfa.exception.EmailSendingException;
 import com.randered.mfa.model.MfaResponse;
 import com.randered.mfa.service.CodeService;
@@ -29,22 +30,22 @@ public class MfaController {
     private MailService mailService;
 
     @PostMapping("/send")
-    public MfaResponse sendMfaCode(@Valid final String email) {
+    public MfaResponse sendCode(@Valid final String email) {
         try {
             final MfaEntity issued = codeService.issueMfaCode(email);
             mailService.sendEmail(issued);
             codeService.update(issued);
-            return MfaResponse.builder().message(EMAIL_SUCCESSFULLY_SEND + email).build();
+            return MfaResponse.builder().message(EMAIL_SUCCESSFULLY_SEND + email).requestType(RequestType.ISSUE_CODE).build();
         } catch (EmailSendingException e) {
-            return MfaResponse.builder().message(EMAIL_FAILED + email).build();
+            return MfaResponse.builder().message(EMAIL_FAILED + email).requestType(RequestType.ISSUE_CODE).build();
         }
     }
 
     @PostMapping("/verify")
-    public MfaResponse verifyMfaCode(@Valid final String email, @RequestParam final UUID code) {
+    public MfaResponse verifyCode(@Valid final String email, @RequestParam final UUID code) {
         if (codeService.verifyMfaCode(email, code)) {
-            return MfaResponse.builder().message(CODE_SUCCESSFULLY_VALIDATED).build();
+            return MfaResponse.builder().message(CODE_SUCCESSFULLY_VALIDATED).requestType(RequestType.VERIFY_CODE).build();
         }
-        return MfaResponse.builder().message(CODE_FAILED_VALIDATION).build();
+        return MfaResponse.builder().message(CODE_FAILED_VALIDATION).requestType(RequestType.VERIFY_CODE).build();
     }
 }
