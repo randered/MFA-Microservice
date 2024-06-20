@@ -87,7 +87,8 @@ The application exposes the following endpoints:
 
 Method: POST
 
-Description: Sends an MFA code to the specified email address.
+Description: Sends an MFA code to the specified email address. Code is valid for `10 minutes`.
+You can change that value from the `application.yml` file
 - Verify MFA Code: /api/mfa/verify:
 
 Method: POST
